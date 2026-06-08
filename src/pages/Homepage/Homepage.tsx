@@ -75,7 +75,7 @@ export default function Homepage() {
         eventData,
       );
 
-      throttledSetPageData([...dataArray.current]);
+      setPageData([...dataArray.current]);
 
       if (tableContainerRef.current) {
         tableContainerRef.current.scrollTop =

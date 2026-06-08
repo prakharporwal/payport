@@ -1,0 +1,24 @@
+export function throttle(func: Function, timer: number) {
+  let timeoutId: number | null;
+  let lastResult;
+  return function (...args: any) {
+    if (timeoutId) {console.log("throttled"); return};
+    lastResult = func.call(this, ...args);
+    
+    timeoutId = setTimeout(() => {
+      timeoutId = null;
+    }, timer);
+
+    return lastResult;
+  };
+}
+
+export function formattedPrice(amount: number, currency: string = 'USD'){
+  if(!amount || amount === 0) return "$0";
+  const formatted = new Intl.NumberFormat('en-US',{
+    style: 'currency',
+    currency: currency
+  }).format(amount)
+
+  return formatted;
+}

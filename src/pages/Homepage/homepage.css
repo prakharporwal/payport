@@ -1,0 +1,72 @@
+.page-container {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+}
+
+.first-fold-section {
+  display: flex;
+  flex-direction: row;
+}
+
+.nav-wrapper {
+  margin-top: -27px;
+  padding-top: 16px;
+  height: 95vh;
+  background-color: #004687;
+  color: white;
+  border-radius: 0 8px 8px 0;
+}
+
+.time-stamp{
+  font-size: 14px;
+}
+
+.content-wrapper {
+  padding: 8px 16px;
+  height: 100vh;
+}
+
+.table-wrapper {
+  width: 90%;
+  margin: 20px;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.section-heading {
+  font-size: 16px;
+  text-align: left;
+  padding: 0 8px;
+}
+
+
+.heading-cards {
+  margin: 4px 8px;
+  width: 100%;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  flex-direction: row;
+  overflow: hidden;
+  overflow-x: auto;
+}
+
+.dashboard-list {
+  width: 50vw;
+  flex: 1
+}
+
+.dashboard-list h2{
+  margin: 0;
+  margin-top: 12px;
+}
+
+.chart-container {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  align-items: center;
+  justify-content: center;
+  margin: 32px 0;
+  padding: 32px 0;
+}

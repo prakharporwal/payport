@@ -1,0 +1,9 @@
+export enum PaymentMethodType {
+  CARD = "CARD",
+  APPLE_PAY = "APPLE_PAY",
+  GOOGLE_PAY = "GOOGLE_PAY",
+  KLARNA = "KLARNA",
+  AFTERPAY = "AFTERPAY",
+  PAYPAL = "PAYPAL",
+  CARD_INSTALLMENT = "CARD_INSTALLMENT",
+}

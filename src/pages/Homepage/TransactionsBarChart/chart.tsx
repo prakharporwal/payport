@@ -25,7 +25,7 @@ export function TransactionsBarChart({
       data
         ? Object.entries(data).map(([key, value]) => ({
             name: key,
-            money: (value as any)?.amount,
+            money: value?.amount,
           }))
         : [],
     [data],

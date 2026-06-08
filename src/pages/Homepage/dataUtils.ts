@@ -36,22 +36,20 @@ export const aggregatePaymentsStreamData = (
     }
     const entry = data.total_payments_by_country[newEvent.country];
     if (entry) {
-      // existing key — mutate in place, alphabetical order is unaffected
       entry.amount += newEvent.amount;
     } else {
-      // new key — insert then sort once
       data.total_payments_by_country[newEvent.country] = {
         amount: newEvent.amount,
         currency: newEvent.currency,
       };
-
-      // Sort in reverse order for Payment country to top
-      data.total_payments_by_country = Object.fromEntries(
-        Object.entries(data.total_payments_by_country).sort(([,a], [,b]) =>
-          (b.amount - a.amount),
-        ),
-      );
     }
+    // Always reassign — creates a new reference (so chart's useMemo detects the
+    // change) and keeps sort order correct as existing country amounts shift.
+    data.total_payments_by_country = Object.fromEntries(
+      Object.entries(data.total_payments_by_country).sort(
+        ([, a], [, b]) => b.amount - a.amount,
+      ),
+    );
   }
 
   if (newEvent.paymentMethod) {

@@ -21,7 +21,9 @@ function OdometerDigit({ digit }: { digit: number }) {
         style={{ "--d": digit } as React.CSSProperties}
         onAnimationEnd={() => setFlashing(false)}
       >
-        {DIGITS.map((d) => <span key={d}>{d}</span>)}
+        {DIGITS.map((d) => (
+          <span key={d}>{d}</span>
+        ))}
       </span>
     </span>
   );
@@ -30,13 +32,17 @@ function OdometerDigit({ digit }: { digit: number }) {
 function OdometerNumber({ value }: { value: string | number | undefined }) {
   return (
     <span className="odometer">
-      {String(value ?? "–").split("").map((char, i) =>
-        /\d/.test(char) ? (
-          <OdometerDigit key={i} digit={Number(char)} />
-        ) : (
-          <span key={i} className="odometer-char">{char}</span>
-        )
-      )}
+      {String(value ?? "–")
+        .split("")
+        .map((char, i) =>
+          /\d/.test(char) ? (
+            <OdometerDigit key={i} digit={Number(char)} />
+          ) : (
+            <span key={i} className="odometer-char">
+              {char}
+            </span>
+          ),
+        )}
     </span>
   );
 }
@@ -73,7 +79,9 @@ export default function Card({ data }: { data: CardData }) {
 
   return (
     <div className={cls}>
-      <div className="card-value"><OdometerNumber value={title} /></div>
+      <div className="card-value">
+        <OdometerNumber value={title} />
+      </div>
       <div className="card-title">{label}</div>
     </div>
   );

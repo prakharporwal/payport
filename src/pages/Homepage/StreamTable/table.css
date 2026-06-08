@@ -1,17 +1,30 @@
 table {
   width: 100%;
-  min-width: 500px;
+  min-width: 600px;
   color: black;
   border-collapse: collapse;
   white-space: nowrap;
   font-size: 16px;
   background-color: #fff;
   border: 1px solid #f0f0f0;
+  table-layout: fixed;
+  width: 100%;
+}
+
+table th:nth-child(1) { width: 18%; } /* Country */
+table th:nth-child(2) { width: 25%; } /* Amount */
+table th:nth-child(3) { width: 30%; } /* Payment Method */
+table th:nth-child(4) { width: 10%; } /* Source */
+table th:nth-child(5) { width: 15%; } /* Status */
+
+table td {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 table th {
-  padding: 4px 8px;
-  text-align: left; 
+  padding: 4px 6px;
+  text-align: left;
   position: sticky;
   top: 0;
   z-index: 1;
@@ -21,20 +34,18 @@ table th {
 }
 
 table td {
-  padding: 8px 12px;
+  padding: 8px 6px;
   text-align: left;
-  /* background-color: #fff; */
 }
-
 
 .skeleton-text {
   height: 16px;
   width: 100%;
   background: #f0f0f0;
   background-image: linear-gradient(
-    90deg, 
-    #f0f0f0 0px, 
-    #e0e0e0 40px, 
+    90deg,
+    #f0f0f0 0px,
+    #e0e0e0 40px,
     #f0f0f0 80px
   );
   background-size: 200% 100%;
@@ -46,9 +57,9 @@ th .skeleton-text {
   width: 60%;
   height: 18px;
   background-image: linear-gradient(
-    90deg, 
-    #e0e0e0 0px, 
-    #d0d0d0 40px, 
+    90deg,
+    #e0e0e0 0px,
+    #d0d0d0 40px,
     #e0e0e0 80px
   );
 }
@@ -62,8 +73,7 @@ th .skeleton-text {
   }
 }
 
-
-.row-highlight{
+.row-highlight {
   background-color: rgb(207, 255, 207) !important;
   color: blue;
 }

@@ -2,8 +2,6 @@ import { useMemo } from "react";
 import {
   Bar,
   BarChart,
-  CartesianGrid,
-  Legend,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -11,7 +9,17 @@ import {
 } from "recharts";
 import "./chart.css";
 
-export function TransactionsBarChart({ label, data, loading }) {
+interface ITransactionsBarChart {
+  label: string;
+  data: Record<string, any>;
+  loading: boolean;
+}
+
+export function TransactionsBarChart({
+  label,
+  data,
+  loading,
+}: ITransactionsBarChart) {
   const modifiedData = useMemo(
     () =>
       data
@@ -20,19 +28,36 @@ export function TransactionsBarChart({ label, data, loading }) {
             money: (value as any)?.amount,
           }))
         : [],
-    [data]
+    [data],
   );
 
-  if (loading) return <div className={"chart-container"}><BarChartSkeleton /></div>;
+  if (loading)
+    return (
+      <div className={"chart-container"}>
+        <BarChartSkeleton />
+      </div>
+    );
   if (!data) return null;
 
   return (
     <div className={"chart-container"}>
       <ResponsiveContainer width={"100%"} height={"100%"}>
-        <BarChart title={label} data={modifiedData} responsive barSize={20} margin={{ bottom: 44, left: 10 }}>
-          <XAxis dataKey={"name"} tick={{ fontSize: 13 }} angle={-25} textAnchor="middle" interval={0} />
+        <BarChart
+          title={label}
+          data={modifiedData}
+          responsive
+          barSize={20}
+          margin={{ bottom: 16, left: 4}}
+        >
+          <XAxis
+            dataKey={"name"}
+            tick={{ fontSize: 13 }}
+            angle={-20}
+            textAnchor='middle'
+            interval={0}
+          />
           <YAxis
-            width={100}
+            width={50}
             tick={{ fontSize: 13 }}
             tickFormatter={(value) =>
               new Intl.NumberFormat("en-US", {

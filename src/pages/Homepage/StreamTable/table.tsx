@@ -4,32 +4,43 @@ import "./table.css";
 interface IDataTable {
   data: Record<string, any>;
   loading: boolean;
-  highlightThreshold?: number
+  highlightThreshold?: number;
 }
 
-
-const tableColumns = ["ID", "Country", "Amount", "Payment Method", "Source", "Status"]
+const tableColumns = [
+  "Country",
+  "Amount",
+  "Payment Method",
+  "Source",
+  "Status",
+];
 
 export function DataTable({ data, loading, highlightThreshold }: IDataTable) {
   if (loading) {
     return <TableSkeleton rowCount={5} columns={tableColumns} />;
   }
 
-  if (!data || !Array.isArray(data) || data.length === 0){
+  if (!data || !Array.isArray(data) || data.length === 0) {
     return <div>No data to show</div>;
   }
   return (
     <table>
       <thead>
         <tr>
-          {tableColumns.map((item)=><th>{item}</th>)}
+          {tableColumns.map((item) => (
+            <th>{item}</th>
+          ))}
         </tr>
       </thead>
       <tbody>
         {data.map((item, idx) => {
           return (
-            <tr key={item.eventId} className={item.amount>=highlightThreshold ? "row-highlight":""}>
-              <td>{item.eventId}</td>
+            <tr
+              key={item.eventId}
+              className={
+                item.amount >= highlightThreshold ? "row-highlight" : ""
+              }
+            >
               <td>{item.country}</td>
               <td>{formattedPrice(item.amount, item.currency)}</td>
               <td>{item.paymentMethod}</td>
@@ -48,7 +59,9 @@ function TableSkeleton({ rowCount, columns }) {
     <table className="skeleton-table">
       <thead>
         <tr>
-          {columns.map((item)=><th>{item}</th>)}
+          {columns.map((item) => (
+            <th>{item}</th>
+          ))}
         </tr>
       </thead>
       <tbody>

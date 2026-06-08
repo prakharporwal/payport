@@ -3,18 +3,15 @@
   padding: 12px 16px;
   margin: 8px;
   background: white;
-  min-width: 120px;
+  min-width: 110px;
   width: max-content;
-  height: 48px;
+  height: 56px;
   color: black;
-  border: 1px solid #E4E7EB;
-  /* box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
-  box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.1); */
+  border: 1px solid #e4e7eb;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
-  /* background: radial-gradient(at 0% 100%, #eaf8ff 0px, transparent 50%), radial-gradient(at 100% 0%, #c6dcee 0px, transparent 50%) #fff; */
 }
 
 .highlighted {
@@ -22,7 +19,6 @@
 }
 
 .card--info {
-  /* background: radial-gradient(at 0% 100%, #dbeffe 0px, transparent 50%), radial-gradient(at 100% 0%, #bfdbfe 0px, transparent 50%) #f0f7ff; */
   border-color: #93c5fd;
   color: #1e3a5f;
 }
@@ -36,9 +32,15 @@
 }
 
 @keyframes digit-flash-info {
-  0%   { color: #1d4ed8; }
-  60%  { color: #1d4ed8; }
-  100% { color: #1e3a5f; }
+  0% {
+    color: #1d4ed8;
+  }
+  60% {
+    color: #1d4ed8;
+  }
+  100% {
+    color: #1e3a5f;
+  }
 }
 
 .card--success {
@@ -55,9 +57,15 @@
 }
 
 @keyframes digit-flash-success {
-  0%   { color: #15803d; }
-  60%  { color: #15803d; }
-  100% { color: #14532d; }
+  0% {
+    color: #15803d;
+  }
+  60% {
+    color: #15803d;
+  }
+  100% {
+    color: #14532d;
+  }
 }
 
 .card--error {
@@ -75,9 +83,15 @@
 }
 
 @keyframes digit-flash-error {
-  0%   { color: #b91c1c; }
-  60%  { color: #b91c1c; }
-  100% { color: #7f1d1d; }
+  0% {
+    color: #b91c1c;
+  }
+  60% {
+    color: #b91c1c;
+  }
+  100% {
+    color: #7f1d1d;
+  }
 }
 
 .card-title {
@@ -122,9 +136,15 @@
 }
 
 @keyframes digit-flash {
-  0%   { color: #2563eb; }
-  60%  { color: #2563eb; }
-  100% { color: black; }
+  0% {
+    color: #2563eb;
+  }
+  60% {
+    color: #2563eb;
+  }
+  100% {
+    color: black;
+  }
 }
 
 .odometer-col--flash {
@@ -132,8 +152,12 @@
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 .skeleton-line {

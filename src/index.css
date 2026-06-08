@@ -1,8 +1,7 @@
 :root {
-  --text: #1A1D20;
-  --text-h: #1A1D20;
-  --text-secondary: #6C757D
-  --bg: #fff;
+  --text: #fefefe;
+  --text-h: #1a1d20;
+  --text-secondary: #6c757d --bg: #fff;
   --border: #e5e4e7;
   --code-bg: #f4f3ec;
   --accent: #aa3bff;
@@ -12,8 +11,8 @@
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --sans: system-ui, "Segoe UI", Roboto, sans-serif;
+  --heading: system-ui, "Segoe UI", Roboto, sans-serif;
   --mono: "Roboto", ui-monospace, Consolas, monospace;
 
   font: 18px/145% var(--sans);
@@ -33,7 +32,7 @@
 
 /* @media (prefers-color-scheme: dark) {
   :root {
-    --text: #9ca3af;
+    --text: #fefefe;
     --text-h: #f3f4f6;
     --bg: #142378;
     --border: #2e303a;
@@ -90,13 +89,6 @@ p {
   margin: 0;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
 
 code {
   font-size: 15px;

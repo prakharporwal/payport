@@ -4,7 +4,7 @@ import { DashboardCards, type AggregatedData } from "./DashboardCards";
 import "./homepage.css";
 import { aggregatePaymentsStreamData } from "./dataUtils";
 import type { PaymentNotificationEvent } from "../../models/PaymentsEvent";
-import { TransactionsBarChart } from "./TransactionsBarChart/charts";
+import { TransactionsBarChart } from "./TransactionsBarChart/chart";
 import { DataTable } from "./StreamTable/table";
 
 const MAX_ARRAY_SIZE = 5;
@@ -118,34 +118,38 @@ export default function Homepage() {
             : `Last updated at ${new Date(lastUpdatedAt).toISOString()}`}
         </div>
       </nav>
+      <div>
+                    <h2>Payport Dashboard</h2>
+
       <section className="content-wrapper">
-        <div className="grid-left">
-          <DashboardCards aggregatedData={aggregatedData} loading={isLoading} />
-        </div>
-        <div className="grid-right">
+        <div>
           <div className="table-wrapper" ref={tableContainerRef}>
             <DataTable
               loading={isLoading}
               data={pageData}
               highlightThreshold={TRANSACTION_HIGHLIGHT_THRESHOLD}
-            />
+              />
           </div>
           <div className={"chart-container"}>
             <TransactionsBarChart
               loading={isLoading}
               label={"Country"}
               data={{ ...aggregatedData["total_payments_by_country"] }}
-            />
+              />
           </div>
           <div className={"chart-container"}>
             <TransactionsBarChart
               loading={isLoading}
               label={"Payment Method"}
               data={aggregatedData["total_payments_by_payment_method"]}
-            />
+              />
           </div>
         </div>
+        <div>
+          <DashboardCards aggregatedData={aggregatedData} loading={isLoading} />
+        </div>
       </section>
+              </div>
     </div>
   );
 }

@@ -1,11 +1,11 @@
 .table-label {
-    font-size: 14px;
+  font-size: 14px;
 }
 
 .chart-container {
   display: block;
-    width: 90%;
-    height: 220px;
+  width: 95%;
+  height: 240px;
 }
 
 .skeleton-chart {
@@ -26,22 +26,27 @@
 .skeleton-bar {
   flex: 1;
   border-radius: 4px 4px 0 0;
-  background: linear-gradient(
-    90deg,
-    #f0f0f0 25%,
-    #e8e8e8 50%,
-    #f0f0f0 75%
-  );
+  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite linear;
 }
 
 /* Different heights for a varied chart look */
-.skeleton-bar:nth-child(1) { height: 40%; }
-.skeleton-bar:nth-child(2) { height: 70%; }
-.skeleton-bar:nth-child(3) { height: 45%; }
-.skeleton-bar:nth-child(4) { height: 85%; }
-.skeleton-bar:nth-child(5) { height: 60%; }
+.skeleton-bar:nth-child(1) {
+  height: 40%;
+}
+.skeleton-bar:nth-child(2) {
+  height: 70%;
+}
+.skeleton-bar:nth-child(3) {
+  height: 45%;
+}
+.skeleton-bar:nth-child(4) {
+  height: 85%;
+}
+.skeleton-bar:nth-child(5) {
+  height: 60%;
+}
 
 /* Shimmer/wave animation */
 @keyframes shimmer {

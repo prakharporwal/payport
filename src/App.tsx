@@ -6,23 +6,7 @@ function App() {
 
   return (
     <>
-      {page !== "Home" && <button
-        onClick={() => {
-          setPage("Home");
-        }}
-      >
-        Go To dashboard
-      </button>}
-      {page === "Home" && (
-        <button
-          onClick={() => {
-            setPage("base");
-          }}
-        >
-          Go Back
-        </button>
-      )}
-      {page === "Home" && <Homepage />}
+       <Homepage />
     </>
   );
 }

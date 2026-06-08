@@ -20,6 +20,8 @@
 }
 
 .content-wrapper {
+  display: grid;
+  grid-template-columns: 4fr 5fr;
   background-color: #F8F9FA;
   padding: 8px 16px;
   height: 100vh;
@@ -51,11 +53,6 @@
   overflow-x: auto;
 }
 
-.dashboard-list {
-  width: 50vw;
-  flex: 1
-}
-
 .dashboard-list h2{
   margin: 0;
   margin-top: 12px;
@@ -70,7 +67,6 @@
 }
 
 .grid-right {
-  width: 50vw;
 }
 
 .section-heading {

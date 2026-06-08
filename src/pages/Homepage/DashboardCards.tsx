@@ -31,16 +31,16 @@ const BUSINESS_VITALS_CONFIG = (data: AggregatedData) => [
     numeric: data?.total_volume?.all,
   },
   {
-    label: "Total Failed",
-    title: data?.total_volume?.failed,
-    numeric: data?.total_volume?.failed,
-    variant: "error" as const,
-  },
-  {
     label: "Total Success",
     title: data?.total_volume?.success,
     numeric: data?.total_volume?.success,
     variant: "success" as const,
+  },
+  {
+    label: "Total Failed",
+    title: data?.total_volume?.failed,
+    numeric: data?.total_volume?.failed,
+    variant: "error" as const,
   },
 ];
 
@@ -50,7 +50,7 @@ const DYNAMIC_SECTIONS = [
     dataKey: "total_payments_by_payment_method" as const,
     getCardData: (key: string, value: { amount: number; currency?: string }) => ({
       label: key,
-      title: formattedPrice(value.amount),
+      title: formattedPrice(value.amount, "none"),
       numeric: value.amount,
     }),
   },

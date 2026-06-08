@@ -2,13 +2,13 @@ import { PaymentStatus } from "../../models/enums/PaymentStatus";
 import type { PaymentNotificationEvent } from "../../models/PaymentsEvent";
 
 interface AggregatedData {
-  total_volume: Record<string, number>;
-  total_payments: number;
-  total_payments_by_country: Record<
+  total_volume?: Record<string, number>;
+  total_payments?: number;
+  total_payments_by_country?: Record<
     string,
     { amount: number; currency: string }
   >;
-  total_payments_by_payment_method: Record<string, { amount: number }>;
+  total_payments_by_payment_method?: Record<string, { amount: number }>;
 }
 
 export const aggregatePaymentsStreamData = (

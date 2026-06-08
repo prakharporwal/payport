@@ -8,18 +8,23 @@ import { TransactionsBarChart } from "./TransactionsBarChart/chart.tsx/chart";
 import { DataTable } from "./StreamTable/table";
 
 const MAX_ARRAY_SIZE = 5;
+const UI_RENDER_THROTTLE_TIMEOUT_IN_MILLI_S = 800;
+const SSE_URL =
+  "http://3.108.250.165:3000/events?email=prakharporwal99@gmail.com";
 
 export default function Homepage() {
-  const dataArray = useRef<Array<any>>([]);
-  const [pageData, setPageData] = useState([]);
-  const throttledSetPageData = useRef(throttle(setPageData, 700)).current;
+  const dataArray = useRef<Array<PaymentNotificationEvent>>([]);
+  const [pageData, setPageData] = useState<PaymentNotificationEvent[]>([]);
+  const throttledSetPageData = useRef(
+    throttle(setPageData, UI_RENDER_THROTTLE_TIMEOUT_IN_MILLI_S),
+  ).current;
 
   const [isOnline, setIsOnline] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [isError, setIsError] = useState(null);
   const [lastUpdatedAt, setLastUpdatedAt] = useState(Date.now());
 
-  const tableContainerRef = useRef(null);
+  const tableContainerRef = useRef<HTMLTableElement>(null);
 
   let transformData = useRef({});
   const aggregatedData = useMemo<AggregatedData>(
@@ -29,58 +34,78 @@ export default function Homepage() {
 
   useEffect(() => {
     setLoading(true);
-
-    const sseChannel = new EventSource(
-      "http://3.108.250.165:3000/events?email=prakharporwal99@gmail.com",
-    );
+    const sseChannel = new EventSource(SSE_URL);
     if (sseChannel) {
-      sseChannel.addEventListener("open", (event) => {
+      sseChannel.addEventListener("open", () => {
         setIsOnline(true);
         setLoading(false);
       });
 
-      sseChannel.addEventListener("message", (event) => {
-        const eventData: PaymentNotificationEvent = JSON.parse(event.data);
-        if (eventData.type === "connected") {
-          setIsOnline(true);
-          setLoading(false);
-        }
-        if (eventData.eventId) {
-          dataArray.current.push(eventData);
-          dataArray.current = dataArray.current.slice(
-            -MAX_ARRAY_SIZE,
-            dataArray.current.length,
-          );
-
-          transformData.current = aggregatePaymentsStreamData(
-            transformData.current,
-            eventData,
-          );
-
-          setPageData([...dataArray.current]);
-
-          if (tableContainerRef.current) {
-            const container = tableContainerRef.current;
-            if (container) {
-              container.scrollTo({
-                top: container.scrollHeight,
-                behavior: "smooth",
-              });
-            }
-          }
-        }
-      });
+      sseChannel.addEventListener("message", sseMessageHandler);
 
       sseChannel.addEventListener("error", (error) => {
         console.log("connection errored", error);
         setIsOnline(false);
+        setLoading(false);
         setLastUpdatedAt(Date.now());
+        setIsError({});
       });
     }
-
     // cleanup the connection if page is unmounted
     return () => sseChannel.close();
   }, []);
+
+  function sseMessageHandler(event: MessageEvent<string>) {
+    const eventData: PaymentNotificationEvent = JSON.parse(event.data);
+    if (eventData.type === "connected") {
+      setIsOnline(true);
+      setLoading(false);
+    }
+    if (eventData.eventId) {
+      dataArray.current.push(eventData);
+      dataArray.current = dataArray.current.slice(
+        -MAX_ARRAY_SIZE,
+        dataArray.current.length,
+      );
+
+      transformData.current = aggregatePaymentsStreamData(
+        transformData.current,
+        eventData,
+      );
+
+      // Instead to keep the UI stable we can use the throttled version also
+      setPageData([...dataArray.current]);
+
+      if (tableContainerRef.current) {
+        const container = tableContainerRef.current;
+        if (container) {
+          container.scrollTo({
+            top: container.scrollHeight,
+            behavior: "smooth",
+          });
+        }
+      }
+    }
+  }
+
+  if (isError) {
+    return (
+      <div className="page-container">
+        <div className="content-wrapper">
+          <div>
+            Something went wrong
+            <button
+              onClick={() => {
+                window.location.reload();
+              }}
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="page-container">
@@ -92,26 +117,26 @@ export default function Homepage() {
         </div>
       </nav>
       <section className="content-wrapper">
-        <div className="first-fold-section">
+        <div className="grid-left">
           <DashboardCards aggregatedData={aggregatedData} loading={isLoading} />
-          <div className="grid-right">
-            <div className="table-wrapper" ref={tableContainerRef}>
-              <DataTable loading={isLoading} data={pageData} />
-            </div>
-            <div className={"chart-container"}>
-              <TransactionsBarChart
-                loading={isLoading}
-                label={"Country"}
-                data={{ ...aggregatedData["total_payments_by_country"] }}
-              />
-              </div>
-              <div className={"chart-container"}>
-              <TransactionsBarChart
-                loading={isLoading}
-                label={"Payment Method"}
-                data={aggregatedData["total_payments_by_payment_method"]}
-              />
-            </div>
+        </div>
+        <div className="grid-right">
+          <div className="table-wrapper" ref={tableContainerRef}>
+            <DataTable loading={isLoading} data={pageData} />
+          </div>
+          <div className={"chart-container"}>
+            <TransactionsBarChart
+              loading={isLoading}
+              label={"Country"}
+              data={{ ...aggregatedData["total_payments_by_country"] }}
+            />
+          </div>
+          <div className={"chart-container"}>
+            <TransactionsBarChart
+              loading={isLoading}
+              label={"Payment Method"}
+              data={aggregatedData["total_payments_by_payment_method"]}
+            />
           </div>
         </div>
       </section>

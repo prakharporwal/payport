@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useEffect, useRef, useState } from "react";
 import { throttle } from "../../utils";
 import { DashboardCards, type AggregatedData } from "./DashboardCards";
 import "./homepage.css";
@@ -75,17 +75,11 @@ export default function Homepage() {
         eventData,
       );
 
-      // Instead to keep the UI stable we can use the throttled version also
-      setPageData([...dataArray.current]);
+      throttledSetPageData([...dataArray.current]);
 
       if (tableContainerRef.current) {
-        const container = tableContainerRef.current;
-        if (container) {
-          container.scrollTo({
-            top: container.scrollHeight,
-            behavior: "smooth",
-          });
-        }
+        tableContainerRef.current.scrollTop =
+          tableContainerRef.current.scrollHeight;
       }
     }
   }
@@ -133,14 +127,14 @@ export default function Homepage() {
               <TransactionsBarChart
                 loading={isLoading}
                 label={"Country"}
-                data={{ ...aggregatedData["total_payments_by_country"] }}
+                data={aggregatedData["total_payments_by_country"]}
               />
             </div>
             <div className={"chart-container"}>
               <TransactionsBarChart
                 loading={isLoading}
                 label={"Payment Method"}
-                data={{...aggregatedData["total_payments_by_payment_method"]}}
+                data={aggregatedData["total_payments_by_payment_method"]}
               />
             </div>
           </div>

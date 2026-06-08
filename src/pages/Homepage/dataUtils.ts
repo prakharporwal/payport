@@ -44,9 +44,11 @@ export const aggregatePaymentsStreamData = (
         amount: newEvent.amount,
         currency: newEvent.currency,
       };
+
+      // Sort in reverse order for Payment country to top
       data.total_payments_by_country = Object.fromEntries(
-        Object.entries(data.total_payments_by_country).sort(([a], [b]) =>
-          a.localeCompare(b),
+        Object.entries(data.total_payments_by_country).sort(([,a], [,b]) =>
+          (b.amount - a.amount),
         ),
       );
     }
@@ -64,6 +66,7 @@ export const aggregatePaymentsStreamData = (
         amount: newEvent.amount,
       };
     }
+    
     // re-sort every time since relative ranking by amount can change
     data.total_payments_by_payment_method = Object.fromEntries(
       Object.entries(data.total_payments_by_payment_method).sort(

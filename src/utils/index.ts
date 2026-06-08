@@ -15,21 +15,27 @@ export function throttle(func: Function, timer: number) {
   };
 }
 
+const formatterCache = new Map<string, Intl.NumberFormat>();
+
+function getFormatter(currency: string): Intl.NumberFormat {
+  if (!formatterCache.has(currency)) {
+    formatterCache.set(
+      currency,
+      currency === "none"
+        ? new Intl.NumberFormat("en-US", {
+            style: "decimal",
+            maximumFractionDigits: 2,
+          })
+        : new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency,
+          }),
+    );
+  }
+  return formatterCache.get(currency)!;
+}
+
 export function formattedPrice(amount: number, currency: string = "USD") {
   if (!amount || amount === 0) return "$0";
-
-  if (currency === "none") {
-    const formatted = new Intl.NumberFormat("en-US", {
-      style: "decimal",
-      maximumFractionDigits: 2,
-    }).format(amount);
-    return formatted;
-  }
-
-  const formatted = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: currency,
-  }).format(amount);
-
-  return formatted;
+  return getFormatter(currency).format(amount);
 }

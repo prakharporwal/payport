@@ -11,11 +11,11 @@ table {
   width: 100%;
 }
 
-table th:nth-child(1) { width: 18%; } /* Country */
+table th:nth-child(1) { width: 15%; } /* Country */
 table th:nth-child(2) { width: 25%; } /* Amount */
-table th:nth-child(3) { width: 30%; } /* Payment Method */
-table th:nth-child(4) { width: 10%; } /* Source */
-table th:nth-child(5) { width: 15%; } /* Status */
+table th:nth-child(3) { width: 35%; } /* Payment Method */
+table th:nth-child(4) { width: 12%; } /* Source */
+table th:nth-child(5) { width: 20%; } /* Status */
 
 table td {
   overflow: hidden;

@@ -12,58 +12,65 @@ interface AggregatedData {
 }
 
 export const aggregatePaymentsStreamData = (
-  oldAggregatedData: AggregatedData,
+  data: AggregatedData,
   newEvent: PaymentNotificationEvent,
 ): AggregatedData => {
-  if (!newEvent) return oldAggregatedData;
+  if (!newEvent) return data;
 
-  let newData = {
-    ...oldAggregatedData,
-  };
+  if (!data.total_volume) {
+    data.total_volume = { all: 0, failed: 0, success: 0 };
+  }
+  data.total_volume.all += 1;
+
   if (newEvent.status === PaymentStatus.FAILED) {
-    newData = {
-      ...oldAggregatedData,
-      total_volume: {
-        all: (oldAggregatedData?.total_volume?.all ?? 0) + 1,
-        failed: (oldAggregatedData?.total_volume?.failed ?? 0) + 1,
-        success: oldAggregatedData?.total_volume?.success ?? 0,
-      },
-    };
-    return newData;
+    data.total_volume.failed += 1;
+    return data;
   }
 
-  newData = {
-    ...oldAggregatedData,
-    total_volume: {
-      all: (oldAggregatedData?.total_volume?.all ?? 0) + 1,
-      failed: oldAggregatedData?.total_volume?.failed ?? 0,
-      success: (oldAggregatedData?.total_volume?.success ?? 0) + 1,
-    },
-  };
-
-  newData.total_payments = (newData.total_payments ?? 0) + newEvent.amount;
+  data.total_volume.success += 1;
+  data.total_payments = (data.total_payments ?? 0) + newEvent.amount;
 
   if (newEvent.country) {
-    const prevCountry = newData.total_payments_by_country || {};
-    newData.total_payments_by_country = {
-      ...prevCountry,
-      [newEvent.country]: {
-        amount: (prevCountry[newEvent.country]?.amount ?? 0) + newEvent.amount,
+    if (!data.total_payments_by_country) {
+      data.total_payments_by_country = {};
+    }
+    const entry = data.total_payments_by_country[newEvent.country];
+    if (entry) {
+      // existing key — mutate in place, alphabetical order is unaffected
+      entry.amount += newEvent.amount;
+    } else {
+      // new key — insert then sort once
+      data.total_payments_by_country[newEvent.country] = {
+        amount: newEvent.amount,
         currency: newEvent.currency,
-      },
-    };
+      };
+      data.total_payments_by_country = Object.fromEntries(
+        Object.entries(data.total_payments_by_country).sort(([a], [b]) =>
+          a.localeCompare(b),
+        ),
+      );
+    }
   }
 
   if (newEvent.paymentMethod) {
-    const prevMethod = newData.total_payments_by_payment_method || {};
-    newData.total_payments_by_payment_method = {
-      ...prevMethod,
-      [newEvent.paymentMethod]: {
-        amount:
-          (prevMethod[newEvent.paymentMethod]?.amount ?? 0) + newEvent.amount,
-      },
-    };
+    if (!data.total_payments_by_payment_method) {
+      data.total_payments_by_payment_method = {};
+    }
+    const entry = data.total_payments_by_payment_method[newEvent.paymentMethod];
+    if (entry) {
+      entry.amount += newEvent.amount;
+    } else {
+      data.total_payments_by_payment_method[newEvent.paymentMethod] = {
+        amount: newEvent.amount,
+      };
+    }
+    // re-sort every time since relative ranking by amount can change
+    data.total_payments_by_payment_method = Object.fromEntries(
+      Object.entries(data.total_payments_by_payment_method).sort(
+        ([, a], [, b]) => b.amount - a.amount,
+      ),
+    );
   }
 
-  return newData;
+  return data;
 };

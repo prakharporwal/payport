@@ -119,37 +119,39 @@ export default function Homepage() {
         </div>
       </nav>
       <div>
-                    <h2>Payport Dashboard</h2>
-
-      <section className="content-wrapper">
-        <div>
-          <div className="table-wrapper" ref={tableContainerRef}>
-            <DataTable
-              loading={isLoading}
-              data={pageData}
-              highlightThreshold={TRANSACTION_HIGHLIGHT_THRESHOLD}
+        <h2>Payport Dashboard</h2>
+        <section className="content-wrapper">
+          <div>
+            <div className="table-wrapper" ref={tableContainerRef}>
+              <DataTable
+                loading={isLoading}
+                data={pageData}
+                highlightThreshold={TRANSACTION_HIGHLIGHT_THRESHOLD}
               />
-          </div>
-          <div className={"chart-container"}>
-            <TransactionsBarChart
-              loading={isLoading}
-              label={"Country"}
-              data={{ ...aggregatedData["total_payments_by_country"] }}
+            </div>
+            <div className={"chart-container"}>
+              <TransactionsBarChart
+                loading={isLoading}
+                label={"Country"}
+                data={{ ...aggregatedData["total_payments_by_country"] }}
               />
-          </div>
-          <div className={"chart-container"}>
-            <TransactionsBarChart
-              loading={isLoading}
-              label={"Payment Method"}
-              data={aggregatedData["total_payments_by_payment_method"]}
+            </div>
+            <div className={"chart-container"}>
+              <TransactionsBarChart
+                loading={isLoading}
+                label={"Payment Method"}
+                data={{...aggregatedData["total_payments_by_payment_method"]}}
               />
+            </div>
           </div>
-        </div>
-        <div>
-          <DashboardCards aggregatedData={aggregatedData} loading={isLoading} />
-        </div>
-      </section>
-              </div>
+          <div>
+            <DashboardCards
+              aggregatedData={{...aggregatedData}}
+              loading={isLoading}
+            />
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

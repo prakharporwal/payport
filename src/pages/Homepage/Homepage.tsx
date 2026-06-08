@@ -4,13 +4,15 @@ import { DashboardCards, type AggregatedData } from "./DashboardCards";
 import "./homepage.css";
 import { aggregatePaymentsStreamData } from "./dataUtils";
 import type { PaymentNotificationEvent } from "../../models/PaymentsEvent";
-import { TransactionsBarChart } from "./TransactionsBarChart/chart.tsx/chart";
+import { TransactionsBarChart } from "./TransactionsBarChart/charts";
 import { DataTable } from "./StreamTable/table";
 
 const MAX_ARRAY_SIZE = 5;
 const UI_RENDER_THROTTLE_TIMEOUT_IN_MILLI_S = 800;
 const SSE_URL =
   "http://3.108.250.165:3000/events?email=prakharporwal99@gmail.com";
+
+const TRANSACTION_HIGHLIGHT_THRESHOLD = 400;
 
 export default function Homepage() {
   const dataArray = useRef<Array<PaymentNotificationEvent>>([]);
@@ -21,7 +23,7 @@ export default function Homepage() {
 
   const [isOnline, setIsOnline] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const [isError, setIsError] = useState(null);
+  const [isError, setIsError] = useState<Error | null>(null);
   const [lastUpdatedAt, setLastUpdatedAt] = useState(Date.now());
 
   const tableContainerRef = useRef<HTMLTableElement>(null);
@@ -48,7 +50,7 @@ export default function Homepage() {
         setIsOnline(false);
         setLoading(false);
         setLastUpdatedAt(Date.now());
-        setIsError({});
+        setIsError(new Error("error"));
       });
     }
     // cleanup the connection if page is unmounted
@@ -122,7 +124,11 @@ export default function Homepage() {
         </div>
         <div className="grid-right">
           <div className="table-wrapper" ref={tableContainerRef}>
-            <DataTable loading={isLoading} data={pageData} />
+            <DataTable
+              loading={isLoading}
+              data={pageData}
+              highlightThreshold={TRANSACTION_HIGHLIGHT_THRESHOLD}
+            />
           </div>
           <div className={"chart-container"}>
             <TransactionsBarChart

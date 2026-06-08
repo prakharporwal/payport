@@ -1,8 +1,16 @@
 import { formattedPrice } from "../../../utils";
 import "./table.css";
 
+interface IDataTable {
+  data: Record<string, any>;
+  loading: boolean;
+  highlightThreshold?: number
+}
+
+
 const tableColumns = ["ID", "Country", "Amount", "Payment Method", "Source", "Status"]
-export function DataTable({ data, loading }) {
+
+export function DataTable({ data, loading, highlightThreshold }: IDataTable) {
   if (loading) {
     return <TableSkeleton rowCount={5} columns={tableColumns} />;
   }
@@ -20,7 +28,7 @@ export function DataTable({ data, loading }) {
       <tbody>
         {data.map((item, idx) => {
           return (
-            <tr key={item.eventId} className={item.amount>=400 ? "row-highlight":""}>
+            <tr key={item.eventId} className={item.amount>=highlightThreshold ? "row-highlight":""}>
               <td>{item.eventId}</td>
               <td>{item.country}</td>
               <td>{formattedPrice(item.amount, item.currency)}</td>

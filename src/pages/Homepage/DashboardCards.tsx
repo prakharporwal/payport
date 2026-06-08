@@ -1,10 +1,10 @@
 import Card, { CardSkeleton } from "../../Components/Card/Card";
 import { formattedPrice } from "../../utils";
-import './homepage.css';
+import "./homepage.css";
 
 export interface AggregatedData {
-  total_payments?: any;
-  total_volume?: any;
+  total_payments?: number;
+  total_volume?: Record<string, number>;
   total_payments_by_country?: Record<
     string,
     { amount: number; currency?: string }
@@ -48,7 +48,10 @@ const DYNAMIC_SECTIONS = [
   {
     heading: "Payment Method",
     dataKey: "total_payments_by_payment_method" as const,
-    getCardData: (key: string, value: { amount: number; currency?: string }) => ({
+    getCardData: (
+      key: string,
+      value: { amount: number; currency?: string },
+    ) => ({
       label: key,
       title: formattedPrice(value.amount, "none"),
       numeric: value.amount,
@@ -57,7 +60,10 @@ const DYNAMIC_SECTIONS = [
   {
     heading: "Country",
     dataKey: "total_payments_by_country" as const,
-    getCardData: (key: string, value: { amount: number; currency?: string }) => ({
+    getCardData: (
+      key: string,
+      value: { amount: number; currency?: string },
+    ) => ({
       label: key,
       title: formattedPrice(value.amount, value.currency),
       numeric: value.amount,
@@ -88,10 +94,11 @@ export function DashboardCards({ aggregatedData, loading }: Props) {
                   <CardSkeleton key={i} />
                 ))
               : aggregatedData[dataKey] &&
-                Object.entries(aggregatedData[dataKey]!).map(([key, value], idx) =>
-                  value ? (
-                    <Card key={idx} data={getCardData(key, value)} />
-                  ) : null,
+                Object.entries(aggregatedData[dataKey]!).map(
+                  ([key, value], idx) =>
+                    value ? (
+                      <Card key={idx} data={getCardData(key, value)} />
+                    ) : null,
                 )}
           </div>
         </div>

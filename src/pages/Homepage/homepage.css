@@ -1,6 +1,4 @@
 .page-container {
-  display: grid;
-  grid-template-columns: 220px 1fr;
 }
 
 .first-fold-section {
@@ -9,12 +7,12 @@
 }
 
 .nav-wrapper {
-  margin-top: -27px;
+  /* margin-top: -27px;
   padding-top: 16px;
   height: 95vh;
   background-color: #004687;
   color: white;
-  border-radius: 0 8px 8px 0;
+  border-radius: 0 8px 8px 0; */
 }
 
 .time-stamp{
@@ -22,6 +20,7 @@
 }
 
 .content-wrapper {
+  background-color: #F8F9FA;
   padding: 8px 16px;
   height: 100vh;
 }
@@ -31,6 +30,7 @@
   margin: 20px;
   max-height: 50vh;
   overflow-y: auto;
+  border-radius: 8px;
 }
 
 .section-heading {
@@ -64,9 +64,16 @@
 .chart-container {
   display: flex;
   flex-direction: row;
-  gap: 32px;
+  /* gap: 16px; */
   align-items: center;
   justify-content: center;
-  margin: 32px 0;
-  padding: 32px 0;
+}
+
+.grid-right {
+  width: 50vw;
+}
+
+.section-heading {
+  font-size: 16px;
+  color: var(--text-secondary);
 }

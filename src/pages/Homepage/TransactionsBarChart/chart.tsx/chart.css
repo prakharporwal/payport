@@ -3,11 +3,9 @@
 }
 
 .chart-container {
-  display: flex;
-    padding: 16px 0;
-    margin: 16px 0;
+  display: block;
     width: 90%;
-    height: 240px;
+    height: 220px;
 }
 
 .skeleton-chart {

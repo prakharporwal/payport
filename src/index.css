@@ -1,6 +1,7 @@
 :root {
-  --text: #000000;
-  --text-h: #08060d;
+  --text: #1A1D20;
+  --text-h: #1A1D20;
+  --text-secondary: #6C757D
   --bg: #fff;
   --border: #e5e4e7;
   --code-bg: #f4f3ec;

@@ -1,7 +1,7 @@
 import { formattedPrice } from "../../../utils";
 import "./table.css";
 
-const tableColumns = ["Id", "Country", "Currency", "Amount", "Payment Method", "Source", "Status"]
+const tableColumns = ["ID", "Country", "Amount", "Payment Method", "Source", "Status"]
 export function DataTable({ data, loading }) {
   if (loading) {
     return <TableSkeleton rowCount={5} columns={tableColumns} />;
@@ -21,9 +21,8 @@ export function DataTable({ data, loading }) {
         {data.map((item, idx) => {
           return (
             <tr key={item.eventId} className={item.amount>=400 ? "row-highlight":""}>
-              <td>{idx + 1}</td>
+              <td>{item.eventId}</td>
               <td>{item.country}</td>
-              <td>{item.currency}</td>
               <td>{formattedPrice(item.amount, item.currency)}</td>
               <td>{item.paymentMethod}</td>
               <td>{item.source}</td>

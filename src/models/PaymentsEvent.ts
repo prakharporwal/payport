@@ -5,12 +5,13 @@ import type { PaymentSource } from "./enums/PaymentSource";
 import type { PaymentStatus } from "./enums/PaymentStatus";
 
 export interface PaymentNotificationEvent {
-  "eventId": string,
-  "timestamp": string,
-  "country": Country,
-  "currency": Currency,
-  "amount": number,
-  "paymentMethod": PaymentMethodType,
-  "source": PaymentSource,
-  "status": PaymentStatus
+  eventId: string;
+  timestamp: string;
+  country: Country;
+  currency: Currency;
+  amount: number;
+  paymentMethod: PaymentMethodType;
+  source: PaymentSource;
+  status: PaymentStatus;
+  type?: string;
 }

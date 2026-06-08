@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { formattedPrice, throttle } from "../../utils";
-import Card from "../../Components/Card/Card";
+import { throttle } from "../../utils";
+import { DashboardCards, type AggregatedData } from "./DashboardCards";
 import "./homepage.css";
 import { aggregatePaymentsStreamData } from "./dataUtils";
 import type { PaymentNotificationEvent } from "../../models/PaymentsEvent";
@@ -8,13 +8,6 @@ import { TransactionsBarChart } from "./TransactionsBarChart/chart.tsx/chart";
 import { DataTable } from "./StreamTable/table";
 
 const MAX_ARRAY_SIZE = 5;
-
-interface IPageData {
-  total_payments: object;
-  total_volume: object;
-  total_payments_by_country: object;
-  total_payments_by_payment_method: object;
-}
 
 export default function Homepage() {
   const dataArray = useRef<Array<any>>([]);
@@ -29,7 +22,7 @@ export default function Homepage() {
   const tableContainerRef = useRef(null);
 
   let transformData = useRef({});
-  const aggregatedData = useMemo<IPageData>(
+  const aggregatedData = useMemo<AggregatedData>(
     () => transformData.current,
     [transformData.current],
   );
@@ -42,13 +35,16 @@ export default function Homepage() {
     );
     if (sseChannel) {
       sseChannel.addEventListener("open", (event) => {
-        console.log("connection is opened", event);
         setIsOnline(true);
         setLoading(false);
       });
 
       sseChannel.addEventListener("message", (event) => {
         const eventData: PaymentNotificationEvent = JSON.parse(event.data);
+        if (eventData.type === "connected") {
+          setIsOnline(true);
+          setLoading(false);
+        }
         if (eventData.eventId) {
           dataArray.current.push(eventData);
           dataArray.current = dataArray.current.slice(
@@ -61,7 +57,7 @@ export default function Homepage() {
             eventData,
           );
 
-          throttledSetPageData([...dataArray.current]);
+          setPageData([...dataArray.current]);
 
           if (tableContainerRef.current) {
             const container = tableContainerRef.current;
@@ -97,96 +93,26 @@ export default function Homepage() {
       </nav>
       <section className="content-wrapper">
         <div className="first-fold-section">
-          <div>
-            <div className="dashboard-list">
-              <div className="section-heading">Overall</div>
-              <div className="heading-cards">
-                <Card
-                  data={{
-                    label: "Total Payments",
-                    title: formattedPrice(aggregatedData["total_payments"]),
-                    numeric: aggregatedData["total_payments"],
-                  }}
-                ></Card>
-                <Card
-                  data={{
-                    label: "Total Volume",
-                    title: aggregatedData["total_volume"],
-                    numeric: aggregatedData["total_volume"],
-                  }}
-                ></Card>
-              </div>
-            </div>
-            <div className="dashboard-list">
-              <h2 className="section-heading">Payment Method</h2>
-              <div className="heading-cards">
-                {aggregatedData &&
-                  aggregatedData["total_payments_by_payment_method"] &&
-                  Object.entries(
-                    aggregatedData["total_payments_by_payment_method"],
-                  ).map(([key, value], idx) => {
-                    if (
-                      !aggregatedData ||
-                      !aggregatedData["total_payments_by_payment_method"] ||
-                      !value
-                    )
-                      return null;
-                    return (
-                      <Card
-                        key={idx}
-                        data={{
-                          label: key,
-                          title: formattedPrice(value),
-                          numeric: value,
-                        }}
-                      ></Card>
-                    );
-                  })}
-              </div>
-            </div>
-            <div className="dashboard-list">
-              <h2 className="section-heading">Country</h2>
-              <div className="heading-cards">
-                {aggregatedData &&
-                  aggregatedData["total_payments_by_country"] &&
-                  Object.entries(
-                    aggregatedData["total_payments_by_country"],
-                  ).map(([key, value], idx) => {
-                    if (
-                      !aggregatedData ||
-                      !aggregatedData["total_payments_by_country"] ||
-                      !value
-                    )
-                      return null;
-                    return (
-                      <Card
-                        key={idx}
-                        data={{
-                          label: key,
-                          title: formattedPrice(value?.amount, value?.currency),
-                          numeric: value,
-                        }}
-                      ></Card>
-                    );
-                  })}
-              </div>
-            </div>
-          </div>
-           <div className="table-wrapper" ref={tableContainerRef}>
+          <DashboardCards aggregatedData={aggregatedData} loading={isLoading} />
+          <div className="grid-right">
+            <div className="table-wrapper" ref={tableContainerRef}>
               <DataTable loading={isLoading} data={pageData} />
             </div>
-        </div>
-        <div className={"chart-container"}>
-          <TransactionsBarChart
-            loading={isLoading}
-            label={"Country"}
-            data={{ ...aggregatedData["total_payments_by_country"] }}
-          />
-          <TransactionsBarChart
-            loading={isLoading}
-            label={"Payment Method"}
-            data={aggregatedData["total_payments_by_payment_method"]}
-          />
+            <div className={"chart-container"}>
+              <TransactionsBarChart
+                loading={isLoading}
+                label={"Country"}
+                data={{ ...aggregatedData["total_payments_by_country"] }}
+              />
+              </div>
+              <div className={"chart-container"}>
+              <TransactionsBarChart
+                loading={isLoading}
+                label={"Payment Method"}
+                data={aggregatedData["total_payments_by_payment_method"]}
+              />
+            </div>
+          </div>
         </div>
       </section>
     </div>

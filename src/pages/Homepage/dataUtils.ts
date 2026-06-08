@@ -1,55 +1,69 @@
-// has bugs
-// country data updated if that country not in event
-// which is not expected
-// payment method data updated if that payment method not in event
-// which is not expected
-
 import { PaymentStatus } from "../../models/enums/PaymentStatus";
 import type { PaymentNotificationEvent } from "../../models/PaymentsEvent";
 
 interface AggregatedData {
-  total_volume: number;
+  total_volume: Record<string, number>;
   total_payments: number;
-  total_payments_by_country: any;
-  total_payments_by_payment_method: any;
+  total_payments_by_country: Record<
+    string,
+    { amount: number; currency: string }
+  >;
+  total_payments_by_payment_method: Record<string, { amount: number }>;
 }
 
 export const aggregatePaymentsStreamData = (
   oldAggregatedData: AggregatedData,
   newEvent: PaymentNotificationEvent,
-) => {
+): AggregatedData => {
   if (!newEvent) return oldAggregatedData;
 
-  const newData = { ...oldAggregatedData };
-  if (newData["total_volume"] === undefined) {
-    newData["total_volume"] = 1;
-  } else {
-    newData["total_volume"] = newData["total_volume"] + 1;
-  }
-
-  // if status failed no aggregate value changes except volume
+  let newData = {
+    ...oldAggregatedData,
+  };
   if (newEvent.status === PaymentStatus.FAILED) {
+    newData = {
+      ...oldAggregatedData,
+      total_volume: {
+        all: (oldAggregatedData?.total_volume?.all ?? 0) + 1,
+        failed: (oldAggregatedData?.total_volume?.failed ?? 0) + 1,
+        success: oldAggregatedData?.total_volume?.success ?? 0,
+      },
+    };
     return newData;
   }
 
-  newData["total_payments"] =
-    (newData["total_payments"] || 0) + newEvent.amount;
-
-  const prevCountry = newData["total_payments_by_country"] || {};
-  newData["total_payments_by_country"] = {
-    ...prevCountry,
-    [newEvent.country]: {
-      amount: (prevCountry[newEvent.country] && prevCountry[newEvent.country].amount || 0) + newEvent.amount,
-      currency: newEvent.currency,
+  newData = {
+    ...oldAggregatedData,
+    total_volume: {
+      all: (oldAggregatedData?.total_volume?.all ?? 0) + 1,
+      failed: oldAggregatedData?.total_volume?.failed ?? 0,
+      success: (oldAggregatedData?.total_volume?.success ?? 0) + 1,
     },
   };
 
-  const prevMethod = newData["total_payments_by_payment_method"] || {};
-  newData["total_payments_by_payment_method"] = {
-    ...prevMethod,
-    [newEvent.paymentMethod]:
-      (prevMethod[newEvent.paymentMethod] || 0) + newEvent.amount,
-  };
+  newData.total_payments = (newData.total_payments ?? 0) + newEvent.amount;
+
+  if (newEvent.country) {
+    const prevCountry = newData.total_payments_by_country || {};
+    newData.total_payments_by_country = {
+      ...prevCountry,
+      [newEvent.country]: {
+        amount: (prevCountry[newEvent.country]?.amount ?? 0) + newEvent.amount,
+        currency: newEvent.currency,
+      },
+    };
+  }
+
+  if (newEvent.paymentMethod) {
+    const prevMethod = newData.total_payments_by_payment_method || {};
+    newData.total_payments_by_payment_method = {
+      ...prevMethod,
+      [newEvent.paymentMethod]: {
+        amount:
+          (prevMethod[newEvent.paymentMethod]?.amount ?? 0) + newEvent.amount,
+      },
+    };
+  }
 
   return newData;
 };

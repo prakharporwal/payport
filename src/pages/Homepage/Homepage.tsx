@@ -10,7 +10,7 @@ import { DataTable } from "./StreamTable/table";
 const MAX_ARRAY_SIZE = 5;
 const UI_RENDER_THROTTLE_TIMEOUT_IN_MILLI_S = 800;
 const SSE_URL =
-  "http://3.108.250.165:3000/events?email=prakharporwal99@gmail.com";
+  "http://localhost:8080/sse/channel?email=prakharporwal99@gmail.com";
 
 const TRANSACTION_HIGHLIGHT_THRESHOLD = 400;
 
@@ -82,25 +82,6 @@ export default function Homepage() {
           tableContainerRef.current.scrollHeight;
       }
     }
-  }
-
-  if (isError) {
-    return (
-      <div className="page-container">
-        <div className="content-wrapper">
-          <div>
-            Something went wrong
-            <button
-              onClick={() => {
-                window.location.reload();
-              }}
-            >
-              Retry
-            </button>
-          </div>
-        </div>
-      </div>
-    );
   }
 
   return (
